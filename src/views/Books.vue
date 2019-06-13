@@ -334,121 +334,120 @@
 </template>
 
 <script>
-import $ from "jquery"
-import Cart from "../components/Cart"
+import $ from 'jquery'
+import Cart from '../components/Cart'
 export default {
-  data() {
+  data () {
     return {
       products: [],
       product: {}, // 存放modal 資料
       getProduct: {},
       isLoading: false,
       status: {
-        //局部 loading 效果
-        loadingItem: ""
+        // 局部 loading 效果
+        loadingItem: ''
       },
-      couponCode: ""
-    };
+      couponCode: ''
+    }
   },
   components: {
-    Cart,
+    Cart
   },
   methods: {
-    getProducts(page = 1) {
-      const vm = this;
+    getProducts (page = 1) {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/products/all`;
-      vm.isLoading = true;
+      }/products/all`
+      vm.isLoading = true
       this.$http.get(api).then(response => {
-        //console.log(response.data);
-        vm.isLoading = false;
-        vm.products = response.data.products;
-        vm.pagination = response.data.pagination;
-      });
+        // console.log(response.data)
+        vm.isLoading = false
+        vm.products = response.data.products
+        vm.pagination = response.data.pagination
+      })
     },
-    getSingleItem(id) {
-      const vm = this;
+    getSingleItem (id) {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/product/${id}`;
-      vm.status.loadingItem = id;
+      }/product/${id}`
+      vm.status.loadingItem = id
       this.$http.get(api).then(response => {
-        //console.log(response);
-        vm.isLoading = false;
-        vm.product = response.data.product;
-        vm.status.loadingItem = false;
-        $("#productModal").modal("show");
-        vm.status.loadingItem = "";
-        vm.getCart();
-      });
+        // console.log(response)
+        vm.isLoading = false
+        vm.product = response.data.product
+        vm.status.loadingItem = false
+        $('#productModal').modal('show')
+        vm.status.loadingItem = ''
+        vm.getCart()
+      })
     },
-    addToCart(id, qty = 1) {
-      const vm = this;
+    addToCart (id, qty = 1) {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/cart`;
+      }/cart`
       const cart = {
         product_id: id,
         qty
-      };
+      }
       this.$http.post(api, { data: cart }).then(response => {
-        //console.log(response);
-        $("#productModal").modal("hide");
+        // console.log(response)
+        $('#productModal').modal('hide')
         if (response.data.success) {
-          vm.$bus.$emit("messsage:push", ("light", response.data.message));
-          vm.getCart();
+          vm.$bus.$emit('messsage:push', ('light', response.data.message))
+          vm.getCart()
         }
-      });
+      })
     },
-    getCart() {
-      const vm = this;
+    getCart () {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/cart`;
+      }/cart`
       this.$http.get(api).then(response => {
-        //console.log("getCart response", response);
-        vm.getProduct = response.data.data;
-        vm.status.loadingItem = "";
-        vm.$bus.$emit("orderEvent", vm.getProduct);
-      });
+        // console.log('getCart response', response)
+        vm.getProduct = response.data.data
+        vm.status.loadingItem = ''
+        vm.$bus.$emit('orderEvent', vm.getProduct)
+      })
     },
-    gotoDetail(id){
-      this.$router.push(`/detailbook/${id}`);
+    gotoDetail (id) {
+      this.$router.push(`/detailbook/${id}`)
     }
   },
   computed: {
-    filterArray(){
-      const vm = this;
-      return vm.products.filter(function(item) {
-        return item.is_enable === 1;
-      });
+    filterArray () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.is_enable === 1
+      })
     },
-    filterArrayOther() {
-      const vm = this;
-      return vm.products.filter(function(item) {
-        return item.category === "其它程式" && item.is_enable === 1;
-      });
+    filterArrayOther () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.category === '其它程式' && item.is_enable === 1
+      })
     },
-    filterArrayDB() {
-      const vm = this;
-      return vm.products.filter(function(item) {
-        return item.category === "資料庫" && item.is_enable === 1;
-      });
+    filterArrayDB () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.category === '資料庫' && item.is_enable === 1
+      })
     },
-    filterArrayOffice() {
-      const vm = this;
-      return vm.products.filter(function(item) {
-        return item.category === "Office" && item.is_enable === 1;
-      });
+    filterArrayOffice () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.category === 'Office' && item.is_enable === 1
+      })
     }
   },
-  created() {
-    this.getProducts();
-    this.getCart();
-    
+  created () {
+    this.getProducts()
+    this.getCart()
   }
-};
+}
 </script>
 
 <style scoped>
@@ -456,7 +455,7 @@ export default {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   line-height: 24px;
 }
 </style>

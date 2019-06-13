@@ -212,9 +212,9 @@ export default {
     }
   },
   created() {
-    this.getCart();
+    this.getCart()
   }
-};
+}
 </script>
 
 <style>

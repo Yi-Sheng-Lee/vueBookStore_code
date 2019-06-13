@@ -14,15 +14,15 @@
 <script>
 export default {
   methods: {
-    signout(){
-      const vm = this;
-      const api = `${process.env.VUE_APP_APIPATH}/logout`;
+    signout () {
+      const vm = this
+      const api = `${process.env.VUE_APP_APIPATH}/logout`
       vm.$http.post(api).then(response => {
-      //console.log(response.data);
-      if(response.data.success){
-        vm.$router.push('/');
-      }
-      });
+      // console.log(response.data);
+        if (response.data.success) {
+          vm.$router.push('/')
+        }
+      })
     }
   }
 }

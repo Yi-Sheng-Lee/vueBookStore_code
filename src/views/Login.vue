@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-light d-flex justify-content-center aligns-items-center sign-box">
+  <div class="bg-light sign-box">
     <loading :active.sync="isLoading"/>
     <form class="form-signin text-center" @submit.prevent="signin">
       <div class="border border-secondary rounded bg-white p-3">
@@ -36,30 +36,30 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       user: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
-      isLoading: false,
-    };
+      isLoading: false
+    }
   },
   methods: {
-    signin() {
-      const vm = this;
-      const api = `${process.env.VUE_APP_APIPATH}/admin/signin`;
-      vm.isLoading = true;
+    signin () {
+      const vm = this
+      const api = `${process.env.VUE_APP_APIPATH}/admin/signin`
+      vm.isLoading = true
       this.$http.post(api, vm.user).then(response => {
-        console.log(response.data);
+        // console.log(response.data)
         if (response.data.success) {
-          vm.$router.push("/dashboard/products");
-          vm.isLoading = false;
+          vm.$router.push('/dashboard/products')
+          vm.isLoading = false
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style scoped>

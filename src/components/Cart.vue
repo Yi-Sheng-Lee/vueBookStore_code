@@ -69,7 +69,7 @@
                 </tfoot>
               </table>
               <div class="input-group mb-3 input-group-sm" v-if="len !== 0">
-                <input type="text" class="form-control" placeholder="請輸入優惠碼 (試試看 tantan 吧)" v-model="couponCode">
+                <input type="text" class="form-control" placeholder="請輸入優惠碼" v-model="couponCode">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" type="button" @click="checkCoupon">套用優惠碼</button>
                 </div>
@@ -86,68 +86,65 @@
 </template>
 
 <script>
-import $ from "jquery";
 export default {
-  data() {
+  data () {
     return {
       getProduct: {},
-      couponCode: "",
+      couponCode: '',
       tempProduct: {},
-      len: 0,
-    };
+      len: 0
+    }
   },
   methods: {
-    getCart() {
-      const vm = this;
+    getCart () {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/cart`;
-      
+      }/cart`
       this.$http.get(api).then(response => {
-        vm.getProduct = response.data.data;
-        vm.tempProduct = response.data.data;
-        vm.len = response.data.data.carts.length;
-        //console.log("vm.carttproduct", vm.len);
-      });
+        vm.getProduct = response.data.data
+        vm.tempProduct = response.data.data
+        vm.len = response.data.data.carts.length
+        // console.log("vm.carttproduct", vm.len);
+      })
     },
-    deleteCartItem(id) {
-      const vm = this;
+    deleteCartItem (id) {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/cart/${id}`;
+      }/cart/${id}`
       this.$http.delete(api).then(response => {
-        //console.log('刪除');
-        vm.getCart();
-      });
+        // console.log('刪除');
+        vm.getCart()
+      })
     },
-    checkCoupon() {
-      const vm = this;
+    checkCoupon () {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/coupon`;
+      }/coupon`
       const coupon = {
         code: vm.couponCode
-      };
+      }
       this.$http.post(api, { data: coupon }).then(response => {
-        //console.log("coupon", response);
-        vm.getCart();
-      });
+        // console.log("coupon", response);
+        vm.getCart()
+      })
     },
-    goCheck(){
-      this.$router.push('/checkorder');
-    },
+    goCheck () {
+      this.$router.push('/checkorder')
+    }
   },
-  created(){
-    const vm = this;
-    vm.getCart();
-    
+  created () {
+    const vm = this
+    vm.getCart()
     vm.$bus.$on('orderEvent', (order) => {
-      vm.tempProduct = order;
-      vm.len = order.carts.length;
-      //console.log('Event Bus', vm.tempProduct.carts.length);
-    });
+      vm.tempProduct = order
+      vm.len = order.carts.length
+      // console.log('Event Bus', vm.tempProduct.carts.length);
+    })
   }
-};
+}
 </script>
 
 <style>

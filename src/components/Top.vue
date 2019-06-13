@@ -10,31 +10,31 @@
 </template>
 
 <script>
-import $ from "jquery";
-$(window).scroll(function() {
-  let pos = $(window).scrollTop();
+import $ from 'jquery'
+$(window).scroll(function () {
+  let pos = $(window).scrollTop()
   if (pos > 300) {
-    $(".go-top").fadeIn();
+    $('.go-top').fadeIn()
   } else {
-    $(".go-top").fadeOut();
+    $('.go-top').fadeOut()
   }
-  //console.log(pos);
-});
-$(document).ready(function() {
-  $(".go-top>a").on({
-    click: function(e) {
-      e.preventDefault();
-      $("html, body").animate(
+  // console.log(pos);
+})
+$(document).ready(function () {
+  $('.go-top>a').on({
+    click: function (e) {
+      e.preventDefault()
+      $('html, body').animate(
         {
           scrollTop: 0
         },
         1000
-      );
+      )
     }
-  });
-});
+  })
+})
 export default {
-  }
+}
 </script>
 
 <style>

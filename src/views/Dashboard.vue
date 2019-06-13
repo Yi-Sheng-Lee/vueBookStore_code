@@ -14,17 +14,15 @@
 </template>
 
 <script>
-import SideBar from '../components/dashboardSideBar';
-import NavBar from '../components/dashboardNavBar';
-import Alert from "../components/AlertMessage";
-
-
+import SideBar from '../components/dashboardSideBar'
+import NavBar from '../components/dashboardNavBar'
+import Alert from '../components/AlertMessage'
 
 export default {
-    components: {
-        SideBar,
-        NavBar,
-        Alert,
-    }
+  components: {
+    SideBar,
+    NavBar,
+    Alert
+  }
 }
 </script>

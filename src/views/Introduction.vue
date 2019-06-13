@@ -1,6 +1,5 @@
 <template>
   <div>
-    <loading :active.sync="isLoading"/>
     <div class="container my-3">
       <section>
         <h3>台北店</h3>

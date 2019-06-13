@@ -15,20 +15,20 @@
 </template>
 
 <script>
-import Alert from "../components/AlertMessage";
-import Nav from "../components/IndexNav";
-import Footer from "../components/Footer";
-import Top from "../components/Top";
+import Alert from '../components/AlertMessage'
+import Nav from '../components/IndexNav'
+import Footer from '../components/Footer'
+import Top from '../components/Top'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Alert,
     Nav,
     Footer,
     Top
   }
-};
+}
 </script>
 <style scope>
   .main{

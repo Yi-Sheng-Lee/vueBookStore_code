@@ -36,28 +36,6 @@
       </tbody>
     </table>
 
-    <!-- <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item" :class="{'disabled' : !pagination.has_pre}">
-            <a class="page-link" href="#" aria-label="Previous"
-                @click.prevent="getProducts(pagination.current_page - 1)">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-            </li>
-            <li class="page-item" 
-                :class="{'active' : pagination.current_page === page}"
-                v-for="(page) in pagination.total_pages" 
-                :key="page">
-                <a class="page-link" href="#" @click.prevent="getProducts(page)">{{page}}</a>
-            </li>
-            <li class="page-item" :class="{'disabled' : !pagination.has_next}">
-            <a class="page-link" href="#" aria-label="Next"
-                @click.prevent="getProducts(pagination.current_page + 1)">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-            </li>
-        </ul>
-    </nav> -->
     <Pagination :pages="pagination" @emitPages="getProducts"></Pagination>
     <!-- modal -->
     <div
@@ -263,117 +241,116 @@
 </template>
 
 <script>
-//因為只有載入bootstrap 套件，並沒有真正載入jQuery的套件
-import $ from "jquery";
-import Pagination from "../components/Pagination";
+// 因為只有載入bootstrap 套件，並沒有真正載入jQuery的套件
+import $ from 'jquery'
+import Pagination from '../components/Pagination'
 export default {
-  data() {
+  data () {
     return {
       products: [],
       tempProduct: {},
-      pagination: {}, //分頁
-      isNew: "false", //判斷是新增及修改變數，true: 新增， false: 修改
-      isLoading: false, //判斷是否要取用 loading 效果
-      status: {         //局部 loading 效果
-          fileupLoading: false,
+      pagination: {}, // 分頁
+      isNew: 'false', // 判斷是新增及修改變數，true: 新增， false: 修改
+      isLoading: false, // 判斷是否要取用 loading 效果
+      status: { // 局部 loading 效果
+        fileupLoading: false
       }
-    };
-  },
-  components: {
-    Pagination,
-  },
-  methods: {
-    getProducts(page = 1) { // ES6 小方法，預設值帶入 page = 1 ，之後 page 參數有改變就會帶入改變的參數
-      const vm = this;
-      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products?page=${page}`;
-      vm.isLoading = true;
-      this.$http.get(api).then(response => {
-        console.log(response.data);
-        vm.isLoading = false;
-        vm.products = response.data.products;
-        vm.pagination = response.data.pagination;
-      });
-    },
-    openModal(isNew, item) {
-      if (isNew) {
-        this.tempProduct = {}; //如果是空的話，tempProduct會是空的
-        this.isNew = true; //並將isNew改為true
-      } else {
-        this.tempProduct = Object.assign({}, item); // ES6寫法，將 item 放入新陣列中，再安排給 tempProduct，
-        // 因為物件傳參考的特性，所以這樣寫，避免 item 的東西受到汙染
-        this.isNew = false; //將 isNew 設成 false
-      }
-      $("#productModal").modal("show");
-    },
-    updateProduct() {
-      const vm = this;
-      let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`;
-      let httpMethod = "post";
-      if (!vm.isNew) {
-        api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-        httpMethod = "put";
-      }
-      //$http[httpMethod] => $http.post or $http.put
-      //用[]選取httpMethod
-      this.$http[httpMethod](api, { data: vm.tempProduct }).then(response => {
-        console.log(response.data);
-        if (response.data.success) {
-          $("#productModal").modal("hide"); //關閉建立式窗
-          console.log('success');
-          vm.getProducts(vm.pagination.current_page); //重新取得資料
-
-        } else {
-          $("#productModal").modal("hide"); //關閉建立式窗
-          vm.getProducts(vm.pagination.current_page); //重新取得資料
-          console.log("新增失敗");
-        }
-      });
-    },
-    openDeleteModal(item) {
-      this.tempProduct = Object.assign({}, item);
-      $("#delProductModal").modal("show");
-    },
-    deletItem() {
-      const vm = this;
-      let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
-      console.log(vm.tempProduct.id);
-      this.$http.delete(api, { data: vm.tempProduct }).then(response => {
-        console.log(response.data);
-        $("#delProductModal").modal("hide");
-        vm.getProducts(); //重新取得資料
-      });
-    },
-    uploadFile() {
-        //查看圖片的資訊 => this.$refs.files
-        //查看圖片的位置 => this.$refs.files.files[0]
-        console.log(this);
-        const vm = this;
-        const uploadFile = this.$refs.files.files[0];
-        //因為傳送格式為 formData ，所以建立一個formData
-        const formData = new FormData();
-        formData.append('file-to-upload', uploadFile);
-        vm.status.fileupLoading = true;
-        const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/upload`;
-        this.$http.post(api, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        }).then(response => {
-        //console.log(response.data);
-        vm.status.fileupLoading = false;
-        if(response.data.success){
-            // vm.tempProduct.imgURL = response.data.imageUrl;
-            //因為上行的 tempProduct.imgURL 並沒有雙向綁定(沒和vue原件綁在一起)，使用vue.set綁定
-            //將 response.data.imageUrl 強制寫入 vm.tempProduct 的 imgURL 裡
-            vm.$set(vm.tempProduct, 'imgURL', response.data.imageUrl);
-        } else {
-            vm.$bus.$emit('messsage:push', response.data.message, 'danger');
-        }
-      });
     }
   },
-  created() {
-    this.getProducts();
+  components: {
+    Pagination
+  },
+  methods: {
+    getProducts (page = 1) { // ES6 小方法，預設值帶入 page = 1 ，之後 page 參數有改變就會帶入改變的參數
+      const vm = this
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/products?page=${page}`
+      vm.isLoading = true
+      this.$http.get(api).then(response => {
+        // console.log(response.data)
+        vm.isLoading = false
+        vm.products = response.data.products
+        vm.pagination = response.data.pagination
+      })
+    },
+    openModal (isNew, item) {
+      if (isNew) {
+        this.tempProduct = {} // 如果是空的話，tempProduct會是空的
+        this.isNew = true // 並將isNew改為true
+      } else {
+        this.tempProduct = Object.assign({}, item) // ES6寫法，將 item 放入新陣列中，再安排給 tempProduct，
+        // 因為物件傳參考的特性，所以這樣寫，避免 item 的東西受到汙染
+        this.isNew = false // 將 isNew 設成 false
+      }
+      $('#productModal').modal('show')
+    },
+    updateProduct () {
+      const vm = this
+      let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product`
+      let httpMethod = 'post'
+      if (!vm.isNew) {
+        api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`
+        httpMethod = 'put'
+      }
+      // $http[httpMethod] => $http.post or $http.put
+      // 用[]選取httpMethod
+      this.$http[httpMethod](api, { data: vm.tempProduct }).then(response => {
+        console.log(response.data)
+        if (response.data.success) {
+          $('#productModal').modal('hide') // 關閉建立式窗
+          console.log('success')
+          vm.getProducts(vm.pagination.current_page) // 重新取得資料
+        } else {
+          $('#productModal').modal('hide') // 關閉建立式窗
+          vm.getProducts(vm.pagination.current_page) // 重新取得資料
+          // console.log('新增失敗')
+        }
+      })
+    },
+    openDeleteModal (item) {
+      this.tempProduct = Object.assign({}, item)
+      $('#delProductModal').modal('show')
+    },
+    deletItem () {
+      const vm = this
+      let api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/product/${vm.tempProduct.id}`
+      // console.log(vm.tempProduct.id);
+      this.$http.delete(api, { data: vm.tempProduct }).then(response => {
+        console.log(response.data)
+        $('#delProductModal').modal('hide')
+        vm.getProducts() // 重新取得資料
+      })
+    },
+    uploadFile () {
+      // 查看圖片的資訊 => this.$refs.files
+      // 查看圖片的位置 => this.$refs.files.files[0]
+      // console.log(this)
+      const vm = this
+      const uploadFile = this.$refs.files.files[0]
+      // 因為傳送格式為 formData ，所以建立一個formData
+      const formData = new FormData()
+      formData.append('file-to-upload', uploadFile)
+      vm.status.fileupLoading = true
+      const api = `${process.env.VUE_APP_APIPATH}/api/${process.env.VUE_APP_CUSTOMPATH}/admin/upload`
+      this.$http.post(api, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        // console.log(response.data);
+        vm.status.fileupLoading = false
+        if (response.data.success) {
+          // vm.tempProduct.imgURL = response.data.imageUrl;
+          // 因為上行的 tempProduct.imgURL 並沒有雙向綁定(沒和vue原件綁在一起)，使用vue.set綁定
+          // 將 response.data.imageUrl 強制寫入 vm.tempProduct 的 imgURL 裡
+          vm.$set(vm.tempProduct, 'imgURL', response.data.imageUrl)
+        } else {
+          vm.$bus.$emit('messsage:push', response.data.message, 'danger')
+        }
+      })
+    }
+  },
+  created () {
+    this.getProducts()
   }
-};
+}
 </script>

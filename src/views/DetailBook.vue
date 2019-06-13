@@ -3,10 +3,10 @@
     <loading :active.sync="isLoading"/>
     <!-- <Alert/> -->
     <div class="row container">
-      <div class="col-md-6 text-center">
-        <img :src="product.imgURL" alt class="img-fluid">
+      <div class="col-lg-6 text-center ">
+        <img :src="product.imgURL" alt class="box">
       </div>
-      <div class="col-md-6">
+      <div class="col-lg-6">
         <ul class="list-group">
           <li class="list-group-item border-0 pl-0">
             <h4 class="text-primary">{{product.title}}</h4>
@@ -28,13 +28,13 @@
             {{product.description}}
           </li>
           <li class="list-group-item border-0 pl-0">
-            <div class="d-flex justify-content-between">
-              <form class="form-inline mr-5">
+            <div class="d-flex justify-content-between mflex">
+              <form class="form-inline">
                   <select class="form-control form-control-sm" v-model="count">
                     <option  :value="num"  v-for="(num) in 10" :key="num">選購 {{num}} 本</option>
                   </select>
               </form>
-              <div class="d-flex align-items-center ">
+              <div class="d-flex align-items-center justify-content-end mt-m-3">
                 <div class="text-muted text-nowrap mr-3">
                   小計
                   <strong>{{ count * product.price | currency }}</strong> 元
@@ -58,78 +58,76 @@
 </template>
 
 <script>
-import $ from 'jquery';
-import Alert from "../components/AlertMessage";
-import Cart from "../components/Cart"
+import $ from 'jquery'
+import Cart from '../components/Cart'
 export default {
-  data() {
+  data () {
     return {
-      productId: "",
+      productId: '',
       count: 1,
       product: {},
       status: {
-          loadingItem:"",
+        loadingItem: ''
       },
-      isLoading: false,
-    };
+      isLoading: false
+    }
   },
   components: {
-    Alert,
     Cart
   },
   methods: {
-    getSingleItem(id) {
-      const vm = this;
+    getSingleItem (id) {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/product/${vm.productId}`;
-      vm.status.loadingItem = id;
-      vm.isLoading = true;
+      }/product/${vm.productId}`
+      vm.status.loadingItem = id
+      vm.isLoading = true
       this.$http.get(api).then(response => {
-        vm.isLoading = false;
-        vm.product = response.data.product;
-        vm.getCart();
-        console.log(vm.product);
-      });
+        vm.isLoading = false
+        vm.product = response.data.product
+        vm.getCart()
+        // console.log(vm.product);
+      })
     },
-    addToCart(id, qty = 1) {
-      const vm = this;
+    addToCart (id, qty = 1) {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/cart`;
+      }/cart`
       const cart = {
         product_id: id,
-        qty,
-      };
-      vm.status.loadingItem = id;
+        qty
+      }
+      vm.status.loadingItem = id
       this.$http.post(api, { data: cart }).then(response => {
-        //console.log(response);
-        vm.status.loadingItem = "";
-        $("#productModal").modal("hide");
+        // console.log(response);
+        vm.status.loadingItem = ''
+        $('#productModal').modal('hide')
         if (response.data.success) {
-          vm.$bus.$emit("messsage:push", ("light", response.data.message));
-          vm.getCart();
+          vm.$bus.$emit('messsage:push', ('light', response.data.message))
+          vm.getCart()
         }
-      });
+      })
     },
-    getCart() {
-      const vm = this;
+    getCart () {
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/cart`;
+      }/cart`
       this.$http.get(api).then(response => {
-        //console.log("getCart response", response);
-        vm.getProduct = response.data.data;
-        vm.status.loadingItem = "";
-        vm.$bus.$emit("orderEvent", vm.getProduct);
-      });
-    },
+        // console.log('getCart response', response);
+        vm.getProduct = response.data.data
+        vm.status.loadingItem = ''
+        vm.$bus.$emit('orderEvent', vm.getProduct)
+      })
+    }
   },
-  created() {
-    this.productId = this.$route.params.bookid;
-    this.getSingleItem(this.productId);
+  created () {
+    this.productId = this.$route.params.bookid
+    this.getSingleItem(this.productId)
   }
-};
+}
 </script>
 
 <style scoped>
@@ -137,5 +135,17 @@ export default {
     margin: 1rem 0;
     /* justify-content: center; */
     align-items: center;
+}
+.box{
+  width: 300px;
+  height: 400px;
+}
+@media screen and (max-width: 576px){
+  .mflex{
+    flex-direction: column;
+  }
+  .mt-m-3{
+    margin-top: 1rem;
+  }
 }
 </style>

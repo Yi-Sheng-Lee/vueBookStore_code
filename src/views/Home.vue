@@ -113,7 +113,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       products: [],
       isLoading: false,
@@ -127,12 +127,12 @@ export default {
           disableOnInteraction: false
         },
         pagination: {
-          el: ".swiper-pagination",
+          el: '.swiper-pagination',
           clickable: true
         },
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev"
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       },
       swiperChineseOption: {
@@ -142,12 +142,12 @@ export default {
           enabled: true
         },
         pagination: {
-          el: ".swiper-pagination",
+          el: '.swiper-pagination',
           clickable: false
         },
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev"
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       },
       swiperSimpleChineseOption: {
@@ -157,25 +157,25 @@ export default {
           enabled: true
         },
         pagination: {
-          el: ".swiper-pagination",
+          el: '.swiper-pagination',
           clickable: true
         },
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev"
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       },
       swiperEnglishOption: {
         slidesPerView: 5,
         spaceBetween: 50,
-        //init: false,
-        //   loop: true,
+        // init: false,
+        // loop: true,
         // autoplay: {
-        //   delay: 5000,
-        //   disableOnInteraction: false
+        // delay: 5000,
+        // disableOnInteraction: false
         // },
         pagination: {
-          el: ".swiper-pagination",
+          el: '.swiper-pagination',
           clickable: false
         },
         breakpoints: {
@@ -197,59 +197,58 @@ export default {
           }
         }
       }
-    };
+    }
   },
   methods: {
-    getProducts(page = 1) {
+    getProducts (page = 1) {
       // ES6 小方法，預設值帶入 page = 1 ，之後 page 參數有改變就會帶入改變的參數
-      const vm = this;
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/products/all`;
-      vm.isLoading = true;
+      }/products/all`
+      vm.isLoading = true
       this.$http.get(api).then(response => {
-        vm.products = response.data.products;
-        console.log(vm.products);
-        vm.isLoading = false;
-      });
+        vm.products = response.data.products
+        console.log(vm.products)
+        vm.isLoading = false
+      })
     },
-    gotoDetail(id){
-      this.$router.push(`/detailbook/${id}`);
+    gotoDetail (id) {
+      this.$router.push(`/detailbook/${id}`)
     }
   },
   computed: {
-    filterTradChinese(){
-      const vm = this;
-      return vm.products.filter(function(item){
-        return item.language === '繁體中文' && item.new === "1";
-      });
+    filterTradChinese () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.language === '繁體中文' && item.new === '1'
+      })
     },
-    filterChinese(){
-      const vm = this;
-      return vm.products.filter(function(item){
-        return item.language === '簡體中文' && item.new === "1";
-      });
+    filterChinese () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.language === '簡體中文' && item.new === '1'
+      })
     },
-    filterEnglish(){
-      const vm = this;
-      return vm.products.filter(function(item){
-        return item.language === '英文' && item.new === "1";
-      });
+    filterEnglish () {
+      const vm = this
+      return vm.products.filter(function (item) {
+        return item.language === '英文' && item.new === '1'
+      })
     }
   },
-  created() {
-    this.getProducts();
+  created () {
+    this.getProducts()
   }
-};
+}
 </script>
 
 <style scope>
 /* .swiper-button-prev,
-.swiper-button-next {
+.swiper-button-next{
   width: 27px;
-  height: 22px; 
-}*/
-
+  height: 22px;
+} */
 /* .s-h{
   height: 40px;
 } */

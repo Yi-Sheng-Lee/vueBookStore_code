@@ -49,60 +49,59 @@
 </template>
 
 <script>
-//因為只有載入bootstrap 套件，並沒有真正載入jQuery的套件
-import $ from "jquery";
-import Pagination from "../components/Pagination";
+// 因為只有載入bootstrap 套件，並沒有真正載入jQuery的套件
+import Pagination from '../components/Pagination'
 export default {
-  data() {
+  data () {
     return {
       getOrder: [],
       tempProduct: {},
-      pagination: {}, //分頁
-      isNew: "false", //判斷是新增及修改變數，true: 新增， false: 修改
-      isLoading: false, //判斷是否要取用 loading 效果
+      pagination: {}, // 分頁
+      isNew: 'false', // 判斷是新增及修改變數，true: 新增， false: 修改
+      isLoading: false, // 判斷是否要取用 loading 效果
       status: {
-        //局部 loading 效果
+        // 局部 loading 效果
         fileupLoading: false
       }
-    };
+    }
   },
   components: {
     Pagination
   },
   methods: {
-    getOrderPage(page = 1) {
+    getOrderPage (page = 1) {
       // ES6 小方法，預設值帶入 page = 1 ，之後 page 參數有改變就會帶入改變的參數
-      const vm = this;
+      const vm = this
       const api = `${process.env.VUE_APP_APIPATH}/api/${
         process.env.VUE_APP_CUSTOMPATH
-      }/admin/orders?page=${page}`;
-      vm.isLoading = true;
+      }/admin/orders?page=${page}`
+      vm.isLoading = true
       this.$http.get(api).then(response => {
-        console.log(response.data);
-        vm.isLoading = false;
-        vm.getOrder = response.data.orders;
-        vm.pagination = response.data.pagination;
-      });
+        // console.log(response.data)
+        vm.isLoading = false
+        vm.getOrder = response.data.orders
+        vm.pagination = response.data.pagination
+      })
     }
   },
   computed: {
-    sortOrder() {
-      const vm = this;
-      let finishArray = [];
+    sortOrder () {
+      const vm = this
+      let finishArray = []
       if (vm.getOrder.length) {
         finishArray = vm.getOrder.sort((a, b) => {
-          const aIsPaid = a.is_paid ? 1 : 0;
-          const bIsPaid = b.is_paid ? 1 : 0;
-          return bIsPaid - aIsPaid;
-        });
+          const aIsPaid = a.is_paid ? 1 : 0
+          const bIsPaid = b.is_paid ? 1 : 0
+          return bIsPaid - aIsPaid
+        })
       }
-      return finishArray;
+      return finishArray
     }
   },
-  created() {
-    this.getOrderPage();
+  created () {
+    this.getOrderPage()
   }
-};
+}
 </script>
 <style scoped>
   .table-small td{
