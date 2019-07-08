@@ -189,8 +189,6 @@ export default {
         process.env.VUE_APP_CUSTOMPATH
       }/order`;
       const order = vm.form;
-      vm.isLoading = true;
-
       this.$validator.validate().then(valid => {
         if (valid) {
           this.$http.post(api, { data: order }).then(response => {
@@ -203,7 +201,6 @@ export default {
             }
           });
         } else {
-          //console.log('蘭位不玩政');
         }
       });
     },
